@@ -10,7 +10,7 @@ const PORT:number = parseInt(`${process.env.PORT}`) || 8081;
 
 const app = express();
 
-//required middlewares
+
 app.use(express.json());
 app.use(cors());
 app.use(morgan('tiny'));
