@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { getProductsDatabase, insertProductDatabase, updateProductDatabase } from "../models/database/db";
+import { deleteProductDatabase, getProductsDatabase, insertProductDatabase, updateProductDatabase } from "../models/database/db";
 import ProductModel from "../models/productModel";
 
 
@@ -63,9 +63,31 @@ async function updateProduct(req: Request, res: Response, next: NextFunction) {
 }
 
 
+async function deleteProduct(req:Request, res:Response, next:NextFunction) {
+    try {
+        const id:string = req.params.id;
+        const result = await deleteProductDatabase(id);
+        if (!result) {
+            return res.status(404).json({
+                message: 'Product not found'
+            });
+        }
+        return res.status(200).json({
+            message: 'Product deleted successfully',
+            result
+        });
+    } catch (error) {
+        return res.status(503).json({
+            message: 'Service Unavailable'
+        });
+    }
+}
+
+
 
 export {
     getProducts,
     insertProduct,
-    updateProduct
+    updateProduct,
+    deleteProduct
 }
