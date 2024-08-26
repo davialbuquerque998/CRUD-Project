@@ -1,4 +1,4 @@
-import { Db, MongoClient } from 'mongodb';
+import { Db, MongoClient, ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
 import ProductModel from '../productModel';
 dotenv.config();
@@ -39,7 +39,31 @@ async function insertProductDatabase(product:ProductModel) {
 }
 
 
+async function updateProductDatabase(id:string, product:ProductModel) {
+    const db:Db = await mongoConnection();
+
+    const objectId: ObjectId = new ObjectId(id);
+
+    const result = await db.collection(MONGO_COLLECTION).updateOne({_id:objectId}, {$set:product});
+
+    return result;
+}
+
+
+async function deleteProductDatabase(id:string) {
+    const db:Db = await mongoConnection();
+
+    const objectId: ObjectId = new ObjectId(id);
+
+    const result = await db.collection(MONGO_COLLECTION).deleteOne({_id:objectId});
+
+    return result;
+}
+
+
 export {
     getProductsDatabase,
-    insertProductDatabase
+    insertProductDatabase,
+    updateProductDatabase,
+    deleteProductDatabase
 }

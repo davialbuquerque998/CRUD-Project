@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { getProductsDatabase, insertProductDatabase } from "../models/database/db";
+import { getProductsDatabase, insertProductDatabase, updateProductDatabase } from "../models/database/db";
 import ProductModel from "../models/productModel";
 
 
@@ -33,7 +33,39 @@ async function insertProduct(req:Request, res:Response, next:NextFunction) {
 }
 
 
+async function updateProduct(req: Request, res: Response, next: NextFunction) {
+    try {
+        const name:string = req.body.name;
+        const description:string = req.body.description;
+        const price:number = Number(req.body.price);
+        const isAvailable:boolean = Boolean(req.body.isAvailable);
+        const id = req.params.id as string;
+
+        const newProduct = new ProductModel(name, description, price, isAvailable);
+
+        const result = await updateProductDatabase(id, newProduct);
+
+        if (!result) {
+            return res.status(404).json({
+                message: 'Product not found'
+            });
+        }
+
+        return res.status(200).json({
+            message: 'Product updated successfully',
+            result
+        });
+    } catch (error) {
+        return res.status(503).json({
+            message: 'Service Unavailable'
+        });
+    }
+}
+
+
+
 export {
     getProducts,
-    insertProduct
+    insertProduct,
+    updateProduct
 }

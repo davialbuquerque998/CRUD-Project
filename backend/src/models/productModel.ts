@@ -7,7 +7,7 @@ export default class ProductModel {
     price:number;
     isAvailable:boolean;
 
-    constructor(name:string, description:string, price:number, year:number, isAvailable:boolean) {
+    constructor(name:string, description:string, price:number, isAvailable:boolean) {
         this.name = name;
         this.description = description;
         this.price = price;
