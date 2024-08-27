@@ -1,3 +1,5 @@
+//These are the types coded for development purposes only 
+
 export type Product = {
   _id: string;
   name: string;
