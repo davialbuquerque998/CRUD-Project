@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { 
   deleteProductDatabase, 
+  getProductDatabase, 
   getProductsDatabase, 
   insertProductDatabase, 
   updateProductDatabase 
@@ -25,11 +26,38 @@ async function getProducts(req: Request, res: Response, next: NextFunction) {
     }
 }
 
+async function getProduct(req:Request, res:Response, next:NextFunction) {
+    try {
+
+        const id = req.params.id as string;
+
+        // Retrieve product from the database
+        const product = await getProductDatabase(id);
+
+        // If the product was not found, respond with a 404 status
+        if (!product) {
+            return res.status(404).json({
+                message: 'Product not found'
+            });
+        }
+
+        return res.status(200).json({product});
+
+    } catch (error) {
+        // Handle errors and respond with an internal server error status
+        return res.status(500).json({
+            message: 'Internal Server Error'
+        });
+    }
+}
+
 // Controller to handle inserting a new product into the database
 async function insertProduct(req: Request, res: Response, next: NextFunction) {
     try {
         // Extract the product details from the request body and type it as ProductModel
         const product = req.body as ProductModel;
+
+        
 
         // Insert the product into the database
         const result = await insertProductDatabase(product);
@@ -116,5 +144,6 @@ export {
     getProducts,
     insertProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getProduct
 }

@@ -1,10 +1,12 @@
 "use client";
 
 import axios from "axios";
-import {useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Product } from "@/utils/types/productTypes";
-import { NewProduct } from "@/utils/types/productTypes";
+import { Product, NewProduct } from "@/utils/types/productTypes";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { ENDPOINT, PASSWORD } from "@/utils/constants/environmentConstants";
+
 
 
 function HomePage(): JSX.Element {
@@ -15,19 +17,22 @@ function HomePage(): JSX.Element {
     price: 0,
     isAvailable: false,
   });
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const router = useRouter();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8080/products", {
+        const response = await axios.get(ENDPOINT, {
           headers: {
-            Authorization: "super-secret-password",
+            Authorization: PASSWORD,
           },
         });
         setProducts(response.data.products);
       } catch (error) {
+        setErrorMessage("Error fetching products. Please try again later.");
         console.error("Error fetching products:", error);
       }
     };
@@ -37,114 +42,183 @@ function HomePage(): JSX.Element {
 
   async function addProduct(): Promise<void> {
     try {
-      const response = await axios.post("http://127.0.0.1:8080/products", newProduct, {
+      await axios.post(ENDPOINT, newProduct, {
         headers: {
-          Authorization: "super-secret-password",
+          Authorization: PASSWORD,
         },
       });
-
-      console.log(products);
+      setSuccessMessage("Product added successfully! Please, refresh the page");
+      setErrorMessage(null);
     } catch (error) {
-      alert(error);
+      setErrorMessage("Error adding product. Please try again.");
+      setSuccessMessage(null);
       console.log(error);
     }
   }
 
-  function updateProduct(productId:string) {
+  function updateProduct(productId: string) {
     router.push(`/update/${productId}`);
   }
 
-  async function deleteProduct(productId:string) {
+  async function deleteProduct(productId: string) {
     try {
-      const response = await axios.delete(`http://127.0.0.1:8080/products/${productId}`, {
-        headers:{
-          Authorization:"super-secret-password"
-        }
+      await axios.delete(`${ENDPOINT}/${productId}`, {
+        headers: {
+          Authorization: PASSWORD,
+        },
       });
       setProducts((prevProducts) =>
         prevProducts?.filter((product) => product._id !== productId)
       );
-
+      setSuccessMessage("Product deleted successfully!");
+      setErrorMessage(null);
     } catch (error) {
+      setErrorMessage("Error deleting product. Please try again.");
+      setSuccessMessage(null);
       console.log(error);
-      alert(error);
     }
   }
 
   return (
-    <>
-      <header>
-        <h1>Product Management</h1>
+    <div className="container my-5">
+      <header className="mb-4">
+        <h1 className="text-center">Product Management</h1>
       </header>
 
       <main>
-        <section>
+        <section className="mb-5">
           <h2>Add a New Product</h2>
-          <form method="POST" action={"/"}>
-            <input
-              type="text"
-              id="productName"
-              name="productName"
-              placeholder="Name"
-              value={newProduct.name}
-              onChange={(e) => {
-                setNewProduct({ ...newProduct, name: e.target.value });
-              }}
-              required
-            />
-            <input
-              type="number"
-              id="productPrice"
-              name="productPrice"
-              placeholder="Price"
-              value={newProduct.price}
-              onChange={(e) => {
-                setNewProduct({ ...newProduct, price: Number(e.target.value) });
-              }}
-              required
-            />
-            <textarea
-              id="productDescription"
-              name="productDescription"
-              placeholder="write a description of your product"
-              value={newProduct.description}
-              onChange={(e) => {
-                setNewProduct({ ...newProduct, description: e.target.value });
-              }}
-              required
-            ></textarea>
-            <input
-              type="checkbox"
-              checked={newProduct.isAvailable}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  isAvailable: e.target.checked,
-                })
-              }
-            />
+          {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+          {successMessage && <div className="alert alert-success">{successMessage}</div>}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              addProduct();
+            }}
+            className="needs-validation"
+            noValidate
+          >
+            <div className="mb-3">
+              <label htmlFor="productName" className="form-label">
+                Product Name
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="productName"
+                name="productName"
+                placeholder="Name"
+                value={newProduct.name}
+                onChange={(e) => {
+                  setNewProduct({ ...newProduct, name: e.target.value });
+                }}
+                required
+              />
+              <div className="invalid-feedback">Please provide a product name.</div>
+            </div>
 
-            <button onClick={addProduct}>Add Product</button>
+            <div className="mb-3">
+              <label htmlFor="productPrice" className="form-label">
+                Price
+              </label>
+              <input
+                type="number"
+                className="form-control"
+                id="productPrice"
+                name="productPrice"
+                placeholder="Price"
+                value={newProduct.price}
+                onChange={(e) => {
+                  setNewProduct({ ...newProduct, price: Number(e.target.value) });
+                }}
+                required
+              />
+              <div className="invalid-feedback">Please provide a price.</div>
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="productDescription" className="form-label">
+                Description
+              </label>
+              <textarea
+                className="form-control"
+                id="productDescription"
+                name="productDescription"
+                placeholder="Write a description of your product"
+                value={newProduct.description}
+                onChange={(e) => {
+                  setNewProduct({ ...newProduct, description: e.target.value });
+                }}
+                required
+              ></textarea>
+              <div className="invalid-feedback">Please provide a description.</div>
+            </div>
+
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="isAvailable"
+                checked={newProduct.isAvailable}
+                onChange={(e) =>
+                  setNewProduct({
+                    ...newProduct,
+                    isAvailable: e.target.checked,
+                  })
+                }
+              />
+              <label className="form-check-label" htmlFor="isAvailable">
+                Available
+              </label>
+            </div>
+
+            <button type="submit" className="btn btn-primary">
+              Add Product
+            </button>
           </form>
         </section>
+
         <section>
-          <ul>
-            {products?.map((product) => (
-              <li key={product._id}>
-                {product.name} - {product.description} - ${product.price} -{" "}
-                {product.isAvailable ? "Available" : "Unavailable"}
-                <button onClick={() => updateProduct(product._id)}>Update</button>
-                <button onClick={()=>deleteProduct(product._id)}>Delete</button>
-              </li>
-            ))}
-          </ul>
+          <h2>Product List</h2>
+          {products?.length ? (
+            <ul className="list-group">
+              {products.map((product) => (
+                <li key={product._id} className="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{product.name}</strong> - {product.description} - ${product.price} -{" "}
+                    {product.isAvailable ? (
+                      <span className="badge bg-success">Available</span>
+                    ) : (
+                      <span className="badge bg-danger">Unavailable</span>
+                    )}
+                  </div>
+                  <div>
+                    <button
+                      onClick={() => updateProduct(product._id)}
+                      className="btn btn-sm btn-warning me-2"
+                    >
+                      Update
+                    </button>
+                    <button
+                      onClick={() => deleteProduct(product._id)}
+                      className="btn btn-sm btn-danger"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No products available.</p>
+          )}
         </section>
       </main>
 
-      <footer>
+      <footer className="text-center mt-5">
         <p>&copy; 2024 Davi Arruda Navarro Albuquerque. All rights reserved.</p>
       </footer>
-    </>
+    </div>
   );
 }
 

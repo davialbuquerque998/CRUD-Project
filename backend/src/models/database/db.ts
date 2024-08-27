@@ -36,6 +36,19 @@ async function getProductsDatabase() {
     return products;
 }
 
+// Function to retrieve a single product from the MongoDB collection using its id as a filter
+async function getProductDatabase(id:string) {
+    const db: Db = await mongoConnection();
+
+    // Convert the string ID to an ObjectId
+    const objectId: ObjectId = new ObjectId(id);
+
+    //Fetch the desired product based on its id
+    const result = await db.collection(MONGO_COLLECTION).findOne({_id:objectId});
+
+    return result;
+}
+
 // Function to insert a new product into the MongoDB collection
 async function insertProductDatabase(product: ProductModel) {
     const db: Db = await mongoConnection();
@@ -75,6 +88,7 @@ async function deleteProductDatabase(id: string) {
 // Export the database functions for use in other parts of the application
 export {
     getProductsDatabase,
+    getProductDatabase,
     insertProductDatabase,
     updateProductDatabase,
     deleteProductDatabase
