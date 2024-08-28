@@ -20,7 +20,7 @@ git clone https://github.com/davialbuquerque998/CRUD-Project.git
 
 ### 2. Backend setup
 
-- Create a .env file in the backend directory by copying from .env.example and update the necessary environment variables.
+- Navigate to the backend directory and install the required dependencies:
 
 ```bash
 cd CRUD-Project/backend
