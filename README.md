@@ -1,44 +1,69 @@
-# CRUD-Project
-This is a basic CRUD application so I can highlight my skills with Node Js Typescript, ExpressJs, NextJs and MongoDB
+# 🚀 CRUD Project
 
--For this project, make sure to have node js, npm and mongodb properly installed in your machine
+This project is a **CRUD (Create, Read, Update, Delete)** application, designed to showcase my skills in **Node.js**, **TypeScript**, **Express.js**, **Next.js**, and **MongoDB**.
 
-Follow the instructions below to execute this project
+## 📋 Prerequisites
 
-1. Clone the repository:
-- git clone https://github.com/davialbuquerque998/CRUD-Project.git
+Ensure you have the following installed on your machine:
 
-2. Navigate to the backend directory
-- cd CRUD-Project/backend
+- **Node.js** and **npm**
+- **MongoDB**
 
-3. Install the dependecies
-- npm install 
+## 🚀 Getting Started
 
-4. Create a .env file in the backend directory and add the required environment variables described in the .env.example file
+Follow the steps below to set up and run the project locally:
 
-5. Start the localhost server
-- npm run dev
+### 1. Clone the Repository
+```bash
+git clone https://github.com/davialbuquerque998/CRUD-Project.git
+```
 
-6. Open another terminal window
+### 2. Backend setup
 
-7. Run your MongoDB database
-- sudo systemctl start mongod
+- Create a .env file in the backend directory by copying from .env.example and update the necessary environment variables.
 
-8. Open another terminal window
+```bash
+cd CRUD-Project/backend
+npm install
+```
 
-9. Navigate to the frontend directory
-- cd cd ../frontend
+### 3. Configure Environment Variables
 
-10. Install the dependencies
-- npm install
-
-11. Create a .env.local file in the frontend directory and add the required environment variables described in the .env.local.example file
-
-12. Start the application
-
-- npm run dev
-
-13. Open the http://localhost:3000 url in your browser and use the application
+- Create a .env file in the backend directory by copying from .env.example and update the necessary environment variables.
 
 
+### 4. Start the backend server
+```bash
+npm run dev
+```
+### 5. Start MongoDB
 
+- Run the command below for Linux Ubuntu 
+
+```bash
+sudo systemctl start mongod
+```
+
+### 6. Frontend setup
+
+- In a new terminal window, navigate to the frontend directory and install the dependencies:
+
+```bash
+cd ../frontend
+npm install
+```
+
+
+### 7. Configure Frontend Environment Variables 
+
+- Create a .env.local file in the frontend directory by copying from .env.local.example and set the appropriate environment variables.
+
+### 8. Start the Frontend Application
+
+```bash
+npm run dev
+```
+
+### 9. Access the Application
+
+- Open your browser and navigate to http://localhost:3000 to use the application.
