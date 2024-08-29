@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { NewProduct, Product } from "@/utils/types/productTypes";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ENDPOINT, PASSWORD } from "@/utils/constants/environmentConstants";
+import { onlyValidInputs } from "@/utils/functions/validationFunctions";
 
 // UpdateComponent is responsible for fetching a specific product by its ID,
 // allowing the user to update its details and submit the changes.
@@ -54,6 +55,11 @@ function UpdateComponent(): JSX.Element {
 
   // Function to handle updating the product with the new details provided by the user.
   async function updateProduct() {
+
+    if(!onlyValidInputs(newProduct, setErrorMessage)){
+      return 
+    }
+
     try {
       await axios.put(`${ENDPOINT}/${id}`, newProduct, {
         headers: {

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Product, NewProduct } from "@/utils/types/productTypes";
 import "bootstrap/dist/css/bootstrap.min.css"; // Bootstrap CSS for styling
 import { ENDPOINT, PASSWORD } from "@/utils/constants/environmentConstants"; // Environment constants
+import { onlyValidInputs } from "@/utils/functions/validationFunctions";
 
 // HomePage component - Main component for managing products
 function HomePage(): JSX.Element {
@@ -45,6 +46,11 @@ function HomePage(): JSX.Element {
 
   // Function to add a new product
   async function addProduct(): Promise<void> {
+
+    if(!onlyValidInputs(newProduct, setErrorMessage)){
+      return 
+    }
+    
     try {
       // Send a POST request to add the new product
       await axios.post(ENDPOINT, newProduct, {
