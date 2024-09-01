@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     env:{
-        ENDPOINT:process.env.ENDPOINT,
-        PASSWORD:process.env.PASSWORD
+        NEXT_PUBLIC_ENDPOINT:process.env.NEXT_PUBLIC_ENDPOINT,
+        NEXT_PUBLIC_PASSWORD:process.env.NEXT_PUBLIC_PASSWORD
     }
 };
 
