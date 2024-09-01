@@ -43,6 +43,7 @@ npm run dev
 ```bash
 sudo systemctl start mongod
 ```
+- Or you can adapt the command above to your operational system
 
 ### 6. Frontend setup
 
